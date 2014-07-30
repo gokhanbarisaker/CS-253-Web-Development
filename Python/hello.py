@@ -47,7 +47,7 @@ def valid_day(day):
 def valid_month(month):
   if month:
     monthSimplified = month[:3].lower()
-    return months[monthSimplified]
+    return months.get(monthSimplified, None)
 
 def valid_year(year):
   if year and year.isdigit():
