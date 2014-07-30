@@ -1,20 +1,21 @@
 # -*- coding: UTF-8 -*-
 
 import webapp2
+import cgi
 
 form = """
 <form method="post" action="/">
   <label>
     Day
-    <input type="text" name="day">
+    <input type="text" name="day" value="%(day)s">
   </label>
   <label>
     Month
-    <input type="text" name="month">
+    <input type="text" name="month" value="%(month)s">
   </label>
   <label>
     Year
-    <input type="text" name="year">
+    <input type="text" name="year" value="%(year)s">
   </label>
   <div style="color: red">%(error)s</div>
   <br>
@@ -55,24 +56,46 @@ def valid_year(year):
     if (yearInt > 1800) and (yearInt <2200):
       return yearInt
 
-def write_form(out, error=""):
-  out.write(form % {"error": error})
+def write_form(out, error="", day="", month="", year=""):
+  out.write(form % {"error":  error,
+                    "day":    escape_html(day),
+                    "month":  escape_html(month),
+                    "year":   escape_html(year)})
 
-class MainPage(webapp2.RequestHandler):
+def escape_html(s):
+  return cgi.escape(s, quote=True)
+  # s = s.replace("&", "&amp;")
+  # s = s.replace("<", "&lt;")
+  # s = s.replace(">", "&gt;")
+  # s = s.replace('"', "&quot;")
+  #
+  # return s
+
+class MainHandler(webapp2.RequestHandler):
   def get(self):
     #self.response.headers['Content-Type'] = 'text/plain'
     write_form(self.response.out)
 
   def post(self):
-    day = valid_day(self.request.get('day'))
-    month = valid_month(self.request.get('month'))
-    year = valid_year(self.request.get('year'))
+    user_day = self.request.get('day')
+    user_month = self.request.get('month')
+    user_year = self.request.get('year')
+
+    day = valid_day(user_day)
+    month = valid_month(user_month)
+    year = valid_year(user_year)
 
     if day and month and year:
-      self.response.out.write('Brilliant!')
+      self.redirect("/thanks")
     else:
-      write_form(self.response.out, 'This, my friend, is wrong. Just, wrong!')
+      write_form(self.response.out, 'This, my friend, is wrong. Just, wrong!', user_day, user_month, user_year)
 
+
+class ThanksHandler(webapp2.RequestHandler):
+  def get(self):
+    self.response.out.write('Brilliant!')
+    
 application = webapp2.WSGIApplication([
-    ('/', MainPage)
+    ('/', MainHandler),
+    ('/thanks', ThanksHandler)
 ], debug=True)
