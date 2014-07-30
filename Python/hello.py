@@ -2,6 +2,7 @@
 
 import webapp2
 import cgi
+import rot13
 
 form = """
 <form method="post" action="/">
@@ -18,6 +19,18 @@ form = """
     <input type="text" name="year" value="%(year)s">
   </label>
   <div style="color: red">%(error)s</div>
+  <br>
+  <br>
+  <input type="submit">
+</form>
+"""
+
+rot13_form = """
+<form method="post" action="/unit2/rot13">
+  <label>
+    Rot13
+    <textarea name="text" rows="10" cols="50">%(text)s</textarea>
+  </label>
   <br>
   <br>
   <input type="submit">
@@ -94,8 +107,17 @@ class MainHandler(webapp2.RequestHandler):
 class ThanksHandler(webapp2.RequestHandler):
   def get(self):
     self.response.out.write('Brilliant!')
-    
+
+class Rot13Handler(webapp2.RequestHandler):
+  def get(self):
+    self.response.out.write(rot13_form % {"text": escape_html("")})
+
+  def post(self):
+    user_input = self.request.get('text')
+    self.response.out.write(rot13_form % {"text": escape_html(rot13.encode(user_input))})
+
 application = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/thanks', ThanksHandler)
+    ('/thanks', ThanksHandler),
+    ('/unit2/rot13', Rot13Handler)
 ], debug=True)
