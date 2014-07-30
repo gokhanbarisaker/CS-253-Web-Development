@@ -1,0 +1,7 @@
+application: adroit-cortex-589
+version: ichi
+runtime: go
+api_version: go1
+handlers:
+- url: /.*
+  script: greeter

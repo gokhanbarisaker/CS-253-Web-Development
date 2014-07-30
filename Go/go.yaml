@@ -1,0 +1,9 @@
+application: adroit-cortex-589
+module: go
+version: ichi
+runtime: go
+api_version: go1
+
+handlers:
+- url: /.*
+  script: hello
