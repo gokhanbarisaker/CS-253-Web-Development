@@ -55,13 +55,13 @@ def valid_year(year):
     if (yearInt > 1800) and (yearInt <2200):
       return yearInt
 
-def write_form(error=""):
-  self.response.out.write(form % {"error" : error})
+def write_form(out, error=""):
+  out.write(form % {"error": error})
 
 class MainPage(webapp2.RequestHandler):
   def get(self):
     #self.response.headers['Content-Type'] = 'text/plain'
-    write_form()
+    write_form(self.response.out)
 
   def post(self):
     day = valid_day(self.request.get('day'))
@@ -71,8 +71,7 @@ class MainPage(webapp2.RequestHandler):
     if day and month and year:
       self.response.out.write('Brilliant!')
     else:
-      write_form("This, my friend, is wrong. Just, wrong!")
-
+      write_form(self.response.out, 'This, my friend, is wrong. Just, wrong!')
 
 application = webapp2.WSGIApplication([
     ('/', MainPage)
