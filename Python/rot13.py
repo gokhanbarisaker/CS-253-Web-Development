@@ -1,5 +1,7 @@
 # -*- coding: UTF-8 -*-
 
+import webapp2
+import html
 
 def encode(s):
   alphabet_range = 26
@@ -20,3 +22,13 @@ def encode(s):
     char_list[i] = chr(char_int)
 
   return "".join(char_list)
+
+class Handler(webapp2.RequestHandler):
+  def get(self):
+    params = {"text": ""}
+    self.response.out.write(html.render('rot13.html', **params))
+
+  def post(self):
+    user_input = self.request.get('text')
+    params = {"text": encode(user_input)}
+    self.response.out.write(html.render('rot13.html', **params))
