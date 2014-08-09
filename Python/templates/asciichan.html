@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>/ascii/</title>
+  </head>
+  <body>
+    <h2>/ascii/</h2>
+    {% block form %}
+    {% endblock %}
+
+    <form method="post" action="/unit3/asciichan">
+      <div>
+        <b>Title<b><br>
+        <input type="text" name="title" value="{{title}}">
+      </div>
+      <div>
+        <b>Art<b><br>
+        <textarea name="art">{{art}}</textarea>
+      </div>
+      <input type="submit">
+    </form>
+
+    <hr>
+
+    {% for art in arts %}
+      <div class="art">
+        <div class="art-title">
+          {{art.title}}
+        </div>
+        <pre class="art-ascii">
+          {{art.art}}
+        </pre>
+      </div>
+    {% endfor %}
+
+  </body>
+</html>

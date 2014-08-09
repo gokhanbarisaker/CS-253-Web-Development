@@ -5,6 +5,7 @@ import html
 import rot13
 import signup
 import welcome
+import asciichan
 
 form = """
 <form method="post" action="/">
@@ -95,5 +96,6 @@ application = webapp2.WSGIApplication([
     ('/thanks', ThanksHandler),
     ('/unit2/rot13', rot13.Handler),
     ('/unit2/signup', signup.Handler),
-    ('/unit2/welcome', welcome.Handler)
+    ('/unit2/welcome', welcome.Handler),
+    ('/unit3/asciichan', asciichan.Handler)
 ], debug=True)
