@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>Problem set 3 - Blog</title>
+  </head>
+  <body>
+    <h1>Blog</h1>
+    {% for entry in entries %}
+    <hr>
+    <div class="entry">
+      <div class="entry-title">
+        <h2>{{entry.title}}</h2>
+      </div>
+      <div class="entry-created">
+        {{entry.created}}
+      </div>
+      <div class="entry-content">
+        {{entry.body}}
+      </div>
+    <div>
+    {% endfor %}
+  </body>
+</html>

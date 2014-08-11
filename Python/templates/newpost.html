@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <title>Problem set 3 - Blog - New post</title>
+  </head>
+  <body>
+    <h1>New post</h1>
+    <form method="post" action="/unit3/blog/newpost">
+      <label>
+        Title<br>
+        <input type="text" name="title" value="{{title}}">
+      </label>
+      <br>
+      <label>
+        Body<br>
+        <textarea name="body">{{body}}</textarea>
+      </label>
+      <div>
+        {{error}}
+      <div>
+      <input type="submit">
+    </form>
+  </body>
+</html>

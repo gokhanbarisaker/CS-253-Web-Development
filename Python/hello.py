@@ -6,6 +6,7 @@ import rot13
 import signup
 import welcome
 import asciichan
+import blog
 
 form = """
 <form method="post" action="/">
@@ -97,5 +98,8 @@ application = webapp2.WSGIApplication([
     ('/unit2/rot13', rot13.Handler),
     ('/unit2/signup', signup.Handler),
     ('/unit2/welcome', welcome.Handler),
-    ('/unit3/asciichan', asciichan.Handler)
+    ('/unit3/asciichan', asciichan.Handler),
+    ('/unit3/blog', blog.Handler),
+    (r'/unit3/blog/(\d+)', blog.SingleEntryHandler),
+    ('/unit3/blog/newpost', blog.NewPostHandler)
 ], debug=True)
