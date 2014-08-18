@@ -7,14 +7,14 @@
     {% for entry in entries %}
     <hr>
     <div class="entry">
-      <div class="entry-title">
-        <h2>{{entry.title}}</h2>
+      <div class="entry-subject">
+        <h2>{{entry.subject}}</h2>
       </div>
       <div class="entry-created">
         {{entry.created}}
       </div>
       <div class="entry-content">
-        {{entry.body}}
+        {{entry.content}}
       </div>
     <div>
     {% endfor %}

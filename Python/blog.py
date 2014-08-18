@@ -5,13 +5,13 @@ import html
 from google.appengine.ext import db
 
 class Entry(db.Model):
-  title = db.StringProperty(required = True)
-  body = db.TextProperty(required = True)
+  subject = db.StringProperty(required = True)
+  content = db.TextProperty(required = True)
   created = db.DateTimeProperty(auto_now_add = True)
 
 class Handler(webapp2.RequestHandler):
   def get(self):
-    entries = db.GqlQuery('select * from Entry order by created desc')
+    entries = db.GqlQuery('select * from Entry order by created desc limit 10')
 
     params = {
       'entries':entries
@@ -39,19 +39,19 @@ class NewPostHandler(webapp2.RequestHandler):
     def get(self):
       self.response.write(html.render('newpost.html'))
     def post(self):
-      title = self.request.get('title')
-      body = self.request.get('body')
+      subject = self.request.get('subject')
+      content = self.request.get('content')
 
-      if title and body:
-        entry = Entry(title=title, body=body)
+      if subject and content:
+        entry = Entry(subject=subject, content=content)
         entry.put()
 
         self.redirect("/unit3/blog/{0}".format(entry.key().id()))
       else:
         params = {
-          'title':title,
-          'body':body,
-          'error':'We need both title and body!'
+          'subject':subject,
+          'content':content,
+          'error':'We need both subject and content!'
         }
 
         self.response.write(html.render('newpost.html', **params))
