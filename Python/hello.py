@@ -97,6 +97,7 @@ application = webapp2.WSGIApplication([
     ('/thanks', ThanksHandler),
     ('/unit2/rot13', rot13.Handler),
     ('/unit2/signup', signup.Handler),
+    ('/unit4/signup', signup.Handler),
     ('/unit2/welcome', welcome.Handler),
     ('/unit3/asciichan', asciichan.Handler),
     ('/unit3/blog', blog.Handler),
