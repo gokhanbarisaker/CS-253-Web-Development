@@ -18,6 +18,9 @@ def generate_hmac(data, key = Secret, salt = None):
   h = hmac.new(key, data, salt)
   return '{0}|{1}'.format(h, salt)
 
-def validate_data(data, h):
-  salt = hash.split('|')[-1]
-  return generate_hash(secret, name, salt) == h
+def validate_hash(h):
+  if isinstance(h, basestring):
+    data = h.split('|')[-1]
+
+    if generate_hash(data) == h:
+      return data
