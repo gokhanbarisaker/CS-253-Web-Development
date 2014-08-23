@@ -3,6 +3,7 @@
 import webapp2
 import html
 import security
+from user import User
 
 class Unit2Handler(webapp2.RequestHandler):
   def get(self):
@@ -11,10 +12,15 @@ class Unit2Handler(webapp2.RequestHandler):
 
 class Unit4Handler(webapp2.RequestHandler):
   def get(self):
-    username_hash = self.request.cookies.get('username')
-    user_name = security.validate_hash(username_hash)
+    user_hash = self.request.cookies.get('user')
+    user_id = security.validate_hash(user_hash)
 
-    if user_name:
-      self.response.out.write("Welcome, %s!" % html.escape(user_name))
+    if user_id:
+      user = User.get_by_id(long(user_id))
+
+      if user:
+        self.response.out.write("Welcome, %s!" % html.escape(user.name))
+      else:
+          self.redirect("/unit4/signup")
     else:
       self.redirect("/unit4/signup")

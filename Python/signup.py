@@ -3,7 +3,9 @@
 import webapp2
 import re
 import html
-import security
+import hashlib
+from google.appengine.ext import db
+from user import User
 
 username_regex = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 password_regex = re.compile(r"^.{3,20}$")
@@ -96,7 +98,18 @@ class Unit4Handler(webapp2.RequestHandler):
     if error_detected:
       self.response.out.write(html.render('signup.html', **params))
     else:
-      cookie_value = security.generate_hash(username)
-      cookie = 'username={0}; Path=/'.format(cookie_value)
+      params = {
+        'name':username,
+        'password':hashlib.sha256(password).hexdigest()
+      }
+
+      if email:
+        params['email'] = db.Email(email)
+
+      user = User(**params)
+      user.put()
+      cookie = user.cookify()
+      #cookie_value = security.generate_hash(username)
+      #cookie = 'username={0}; Path=/'.format(cookie_value)
       self.response.headers.add_header('Set-Cookie', cookie)
       self.redirect("/unit4/welcome")
