@@ -15,6 +15,7 @@ class Handler(webapp2.RequestHandler):
     password = self.request.get('password')
 
     if username and password:
+      #User.all().filter('name =', username).get()
       user = db.GqlQuery("select * from User where name='{0}' limit 1".format(username)).get()
 
       if user and (user.password == hashlib.sha256(password).hexdigest()):

@@ -8,6 +8,7 @@ import welcome
 import asciichan
 import blog
 import login
+import logout
 
 form = """
 <form method="post" action="/">
@@ -105,5 +106,6 @@ application = webapp2.WSGIApplication([
     ('/unit3/blog', blog.Handler),
     (r'/unit3/blog/(\d+)', blog.SingleEntryHandler),
     ('/unit3/blog/newpost', blog.NewPostHandler),
-    ('/unit4/login', login.Handler)
+    ('/unit4/login', login.Handler),
+    ('/unit4/logout', logout.Handler)
 ], debug=True)

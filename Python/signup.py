@@ -98,6 +98,8 @@ class Unit4Handler(webapp2.RequestHandler):
     if error_detected:
       self.response.out.write(html.render('signup.html', **params))
     else:
+      #TODO use salt by hashing (pass + salt) and storing as hash|salt
+
       params = {
         'name':username,
         'password':hashlib.sha256(password).hexdigest()
