@@ -2,6 +2,7 @@
 
 import webapp2
 import html
+import json
 from google.appengine.ext import db
 
 
@@ -12,14 +13,33 @@ class Art(db.Model):
 
 
 class Handler(webapp2.RequestHandler):
-  def get(self):
+  def get(self, suffix):
+    output = ''
     arts = self.fetch_arts()
 
-    params = {
-      'arts':arts
-    }
+    if not suffix or suffix == '.html' or suffix == '.htm':
+      params = {
+        'arts':arts
+      }
 
-    self.response.out.write(html.render('asciichan.html', **params))
+      output = html.render('asciichan.html', **params)
+
+    elif suffix == '.json':
+      raw_entries = []
+
+      for art in arts:
+        raw_entries.append({
+          "subject":art.title,
+          "content":art.art,
+          "created":art.created.strftime("%Y-%m-%d %H:%M:%S")
+        })
+
+      output = json.dumps(raw_entries)
+
+    else:
+      self.error(404)
+
+    self.response.out.write(output)
 
   def post(self):
     title = self.request.get('title')
@@ -42,4 +62,6 @@ class Handler(webapp2.RequestHandler):
       self.response.out.write(html.render('asciichan.html', **params))
 
   def fetch_arts(self):
-    return db.GqlQuery("select * from Art order by created desc")
+    arts = db.GqlQuery("select * from Art order by created desc")
+
+    return list(arts)
