@@ -103,7 +103,7 @@ application = webapp2.WSGIApplication([
     ('/unit2/welcome', welcome.Unit2Handler),
     ('/unit4/welcome', welcome.Unit4Handler),
     ('/unit3/asciichan', asciichan.Handler),
-    ('/unit3/blog', blog.Handler),
+    (r'/unit3/blog(.*)', blog.Handler),
     (r'/unit3/blog/(\d+)', blog.SingleEntryHandler),
     ('/unit3/blog/newpost', blog.NewPostHandler),
     ('/unit4/login', login.Handler),

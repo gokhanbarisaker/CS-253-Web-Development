@@ -2,7 +2,9 @@
 
 import webapp2
 import html
+import json
 from google.appengine.ext import db
+import logging
 
 class Entry(db.Model):
   subject = db.StringProperty(required = True)
@@ -10,14 +12,40 @@ class Entry(db.Model):
   created = db.DateTimeProperty(auto_now_add = True)
 
 class Handler(webapp2.RequestHandler):
-  def get(self):
+  def get(self, suffix):
+
+    output = ''
+    entries = self.recent_entries()
+
+    if not suffix or suffix == '.html' or suffix == 'htm':
+      params = {
+        'entries':entries
+      }
+
+      output = html.render('blog.html', **params)
+
+    elif suffix == '.json':
+      raw_entries = []
+
+      for entry in entries:
+        raw_entries.append({
+          "subject":entry.subject,
+          "content":entry.content,
+          "created":entry.created.strftime("%Y-%m-%d %H:%M:%S")
+        })
+
+      output = json.dumps(raw_entries)
+
+    else:
+      self.error(404)
+
+    self.response.out.write(output)
+
+  def recent_entries(self):
     entries = db.GqlQuery('select * from Entry order by created desc limit 10')
 
-    params = {
-      'entries':entries
-    }
+    return list(entries)
 
-    self.response.write(html.render('blog.html', **params))
 
 class SingleEntryHandler(webapp2.RequestHandler):
   def get(self, identifier):
