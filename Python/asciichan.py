@@ -4,12 +4,13 @@ import webapp2
 import html
 import json
 from google.appengine.ext import db
-
+import logging
 
 class Art(db.Model):
   title = db.StringProperty(required = True)
   art = db.TextProperty(required = True)
   created = db.DateTimeProperty(auto_now_add = True)
+  geopoint = db.GeoPtProperty()
 
 
 class Handler(webapp2.RequestHandler):
@@ -25,31 +26,46 @@ class Handler(webapp2.RequestHandler):
       output = html.render('asciichan.html', **params)
 
     elif suffix == '.json':
-      raw_entries = []
+      raw_arts = []
 
       for art in arts:
-        raw_entries.append({
+
+        raw_art = {
           "subject":art.title,
           "content":art.art,
           "created":art.created.strftime("%Y-%m-%d %H:%M:%S")
-        })
+        }
 
-      output = json.dumps(raw_entries)
+        if art.geopoint:
+          raw_art["geopoint"] = {
+            "lat":art.geopoint.lat,
+            "lon":art.geopoint.lon
+          }
+
+        raw_arts.append(raw_art)
+
+      output = json.dumps(raw_arts)
 
     else:
       self.error(404)
 
     self.response.out.write(output)
 
-  def post(self):
+  def post(self, unused):
     title = self.request.get('title')
     art = self.request.get('art')
+    ll = self.request.headers.get('X-AppEngine-CityLatLong')
+    geopoint = None
+
+    if ll:
+      geopoint_values = ll.split(',')
+      geopoint = db.GeoPt(geopoint_values[0], geopoint_values[1])
 
     if title and art:
-      art = Art(title = title, art = art)
+      art = Art(title = title, art = art, geopoint = geopoint)
       art.put()
 
-      self.redirect("/")
+      self.redirect("/unit3/asciichan")
     else:
       arts = fetch_arts()
 

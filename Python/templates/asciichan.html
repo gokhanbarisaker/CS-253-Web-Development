@@ -23,10 +23,20 @@
 
     <hr>
 
+
+    <div class="art-image">
+      <img src="http://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap{% for art in arts %}{% if art.geopoint %}&markers=color:blue|label:S|{{art.geopoint.lat}},{{art.geopoint.lon}}{% endif %}{% endfor %}">
+    </div>
+
+    <hr>
+
     {% for art in arts %}
       <div class="art">
         <div class="art-title">
           {{art.title}}
+        </div>
+        <div class="art-geopoint">
+          {{art.geopoint}}
         </div>
         <pre class="art-ascii">
           {{art.art}}
