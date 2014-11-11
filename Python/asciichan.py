@@ -6,6 +6,8 @@ import json
 from google.appengine.ext import db
 import logging
 
+CACHE = {}
+
 class Art(db.Model):
   title = db.StringProperty(required = True)
   art = db.TextProperty(required = True)
@@ -78,6 +80,16 @@ class Handler(webapp2.RequestHandler):
       self.response.out.write(html.render('asciichan.html', **params))
 
   def fetch_arts(self):
-    arts = db.GqlQuery("select * from Art order by created desc")
+    key = 'arts'
+    arts = CACHE.get(key, None)
 
-    return list(arts)
+    # If cache does not contain arts
+    if not arts:
+      # Fetch arts from database
+      arts = db.GqlQuery("select * from Art order by created desc")
+      arts = list(arts)
+      
+      # Add to in-memory cache
+      CACHE[key] = arts
+
+    return arts
