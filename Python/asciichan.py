@@ -67,6 +67,8 @@ class Handler(webapp2.RequestHandler):
       art = Art(title = title, art = art, geopoint = geopoint)
       art.put()
 
+      CACHE.clear()
+
       self.redirect("/unit3/asciichan")
     else:
       arts = fetch_arts()
@@ -79,16 +81,16 @@ class Handler(webapp2.RequestHandler):
 
       self.response.out.write(html.render('asciichan.html', **params))
 
-  def fetch_arts(self):
+  def fetch_arts(self, update = False):
     key = 'arts'
-    arts = CACHE.get(key, None)
+    arts = (update)?(None):(CACHE.get(key, None))
 
     # If cache does not contain arts
     if not arts:
       # Fetch arts from database
       arts = db.GqlQuery("select * from Art order by created desc")
       arts = list(arts)
-      
+
       # Add to in-memory cache
       CACHE[key] = arts
 
