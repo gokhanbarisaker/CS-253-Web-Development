@@ -3,10 +3,12 @@
 import webapp2
 import html
 import json
+from google.appengine.api import memcache
 from google.appengine.ext import db
 import logging
 
-CACHE = {}
+CACHE_ARTS_KEY = 'arts'
+
 
 class Art(db.Model):
   title = db.StringProperty(required = True)
@@ -64,10 +66,8 @@ class Handler(webapp2.RequestHandler):
       geopoint = db.GeoPt(geopoint_values[0], geopoint_values[1])
 
     if title and art:
-      art = Art(title = title, art = art, geopoint = geopoint)
-      art.put()
-
-      CACHE.clear()
+      #art = Art(title = title, art = art, geopoint = geopoint)
+      self.add_art(title = title, art = art, geopoint = geopoint)
 
       self.redirect("/unit3/asciichan")
     else:
@@ -81,9 +81,33 @@ class Handler(webapp2.RequestHandler):
 
       self.response.out.write(html.render('asciichan.html', **params))
 
+
+  def add_art(self, title, art, geopoint):
+
+      art = Art(title = title, art = art, geopoint = geopoint)
+
+      self.add_art_to_database(art)
+      self.add_art_to_cache(art)
+
+
+  def add_art_to_database(self, art):
+      art.put()
+
+
+  def add_art_to_cache(self, art):
+      #CAS style cache update
+
+      client = memcache.Client()
+      while True: # Retry loop
+          arts = client.gets(CACHE_ARTS_KEY)
+          assert arts is not None, 'Uninitialized counter'
+          arts.append(art)
+          if client.cas(CACHE_ARTS_KEY, arts):
+              break
+
+
   def fetch_arts(self, update = False):
-    key = 'arts'
-    arts = (update)?(None):(CACHE.get(key, None))
+    arts = None if update else memcache.get(CACHE_ARTS_KEY)
 
     # If cache does not contain arts
     if not arts:
@@ -92,6 +116,6 @@ class Handler(webapp2.RequestHandler):
       arts = list(arts)
 
       # Add to in-memory cache
-      CACHE[key] = arts
+      memcache.set(CACHE_ARTS_KEY, arts)
 
     return arts
