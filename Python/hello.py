@@ -103,9 +103,13 @@ application = webapp2.WSGIApplication([
     ('/unit2/welcome', welcome.Unit2Handler),
     ('/unit4/welcome', welcome.Unit4Handler),
     (r'/unit3/asciichan(.*)', asciichan.Handler),
-    (r'/unit3/blog(.*)', blog.Handler),
+    (r'^/unit3/blog(\..*){0,1}$', blog.Handler),
     (r'/unit3/blog/(\d+)', blog.SingleEntryHandler),
     ('/unit3/blog/newpost', blog.NewPostHandler),
     ('/unit4/login', login.Handler),
-    ('/unit4/logout', logout.Handler)
+    ('/unit4/logout', logout.Handler),
+    ('/unit3/blog/signup', signup.Unit4Handler), ## For the sake of lame unit 6 problem set
+    ('/unit3/blog/logout', signup.Unit4Handler), ## For the sake of lame unit 6 problem set
+    ('/unit3/blog/flush', blog.FlushHandler)
+
 ], debug=True)

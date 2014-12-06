@@ -87,27 +87,32 @@ class Handler(webapp2.RequestHandler):
       art = Art(title = title, art = art, geopoint = geopoint)
 
       self.add_art_to_database(art)
-      self.add_art_to_cache(art)
+      self.add_arts_to_cache([art])
 
 
   def add_art_to_database(self, art):
       art.put()
 
 
-  def add_art_to_cache(self, art):
+  def add_arts_to_cache(self, arts):
       #CAS style cache update
 
       client = memcache.Client()
-      while True: # Retry loop
-          arts = client.gets(CACHE_ARTS_KEY)
-          assert arts is not None, 'Uninitialized counter'
-          arts.append(art)
-          if client.cas(CACHE_ARTS_KEY, arts):
+      for x in range(0, 5): # Retry loop
+          cached_arts = client.gets(CACHE_ARTS_KEY)
+
+          if cached_arts is None:
+              client.set(CACHE_ARTS_KEY, arts)
               break
+          else:
+              cached_arts.extend(arts)
+              if client.cas(CACHE_ARTS_KEY, cached_arts):
+                  break
 
 
   def fetch_arts(self, update = False):
-    arts = None if update else memcache.get(CACHE_ARTS_KEY)
+    client = memcache.Client()
+    arts = None if update else client.gets(CACHE_ARTS_KEY)
 
     # If cache does not contain arts
     if not arts:
@@ -116,6 +121,6 @@ class Handler(webapp2.RequestHandler):
       arts = list(arts)
 
       # Add to in-memory cache
-      memcache.set(CACHE_ARTS_KEY, arts)
+      self.add_arts_to_cache(arts)
 
     return arts

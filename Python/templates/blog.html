@@ -3,20 +3,22 @@
     <title>Problem set 3 - Blog</title>
   </head>
   <body>
-    <h1>Blog</h1>
+    <h1>Blog</h1> Queried {{queryTimeElapsed}} seconds ago
     {% for entry in entries %}
     <hr>
-    <div class="entry">
-      <div class="entry-subject">
-        <h2>{{entry.subject}}</h2>
-      </div>
-      <div class="entry-created">
-        {{entry.created}}
-      </div>
-      <div class="entry-content">
-        {{entry.content}}
-      </div>
-    <div>
+    <a href="/unit3/blog/{{entry.key().id()}}">
+      <div class="entry">
+        <div class="entry-subject">
+          <h2>{{entry.subject}}</h2>
+        </div>
+        <div class="entry-created">
+          {{entry.created}}
+        </div>
+        <div class="entry-content">
+          {{entry.content}}
+        </div>
+        <div>
+    </a>
     {% endfor %}
   </body>
 </html>
