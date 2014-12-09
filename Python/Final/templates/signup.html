@@ -1,0 +1,49 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Final</title>
+  <meta name="description" content="CS-253 Final Project">
+  <meta name="author" content="Gokhan Baris Aker">
+
+  <!-- <link rel="stylesheet" href="css/styles.css?v=1.0"> -->
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <h2>Signup</h2>
+  <form method="post" action="/signup">
+    <label>
+      Username
+      <input type="text" name="username" value="{{username}}">
+      <span style="color: red">{{username_error}}</span>
+    </label>
+    <br>
+    <label>
+      Password
+      <input type="password" name="password">
+      <span style="color: red">{{password_error}}</span>
+    </label>
+    <br>
+    <label>
+      Verify Password
+      <input type="password" name="verify">
+      <span style="color: red">{{verify_error}}</span>
+    </label>
+    <br>
+    <label>
+      Email (Optional)
+      <input type="text" name="email" value="{{email}}">
+      <span style="color: red">{{email_error}}</span>
+    </label>
+    <br>
+    <br>
+    <input type="submit">
+  </form>
+</body>
+</html>

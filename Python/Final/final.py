@@ -5,5 +5,6 @@ from handlers import wiki
 
 
 application = webapp2.WSGIApplication([
-    ('/', wiki.GreetHandler)
+    ('/', wiki.GreetHandler),
+    ('/signup', wiki.SignupHandler)
 ], debug=True)
