@@ -1,0 +1,14 @@
+application: adroit-cortex-589
+module: final
+version: ichi
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /.*
+  script: final.application
+
+libraries:
+- name: jinja2
+  version: "latest"
