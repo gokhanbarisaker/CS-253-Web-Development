@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>Final</title>
+  <title>{{wiki.title}}</title>
   <meta name="description" content="CS-253 Final Project">
   <meta name="author" content="Gokhan Baris Aker">
 
@@ -18,6 +18,11 @@
 <body>
   {% include "header.html" %}
 
-  <h1>Welcome to final project wiki</h1>
+  <h1>{{wiki.title}}</h1>
+  <div>
+    <p>
+      {{wiki.body}}
+    </p>
+  </div>
 </body>
 </html>

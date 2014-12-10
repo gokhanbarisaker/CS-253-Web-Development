@@ -1,0 +1,5 @@
+{% if user %}
+{% if wiki %}<a href="/__edit{{wiki.title}}">edit</a>, {% endif %}history, {{user.name}} <a href=/logout>(logout)</a>
+{% else %}
+history, <a href="/login">login<a>, <a href="/signup">signup</a>
+{% endif %}
