@@ -19,9 +19,9 @@
   <h1>Welcome to final project wiki</h1>
 
   {% if user %}
-    edit, history, userName
+    edit, history, {{user.name}}, <a href=/logout>logout</a>
   {% else %}
-    history, login, signup
+    history, <a href="/login">login<a>, <a href="/signup">signup</a>
   {% endif %}
 </body>
 </html>

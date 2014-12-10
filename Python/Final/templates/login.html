@@ -1,0 +1,36 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Login</title>
+  <meta name="description" content="CS-253 Final Project, Login">
+  <meta name="author" content="Gokhan Baris Aker">
+
+  <!-- <link rel="stylesheet" href="css/styles.css?v=1.0"> -->
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <h2>Login</h2>
+  <form method="post" action="/login">
+    <span style="color: red">{{error}}</span>
+    <label>
+      Username
+      <input type="text" name="username" value="{{username}}">
+    </label>
+    <br>
+    <label>
+      Password
+      <input type="password" name="password">
+    </label>
+    <br>
+    <br>
+    <input type="submit" value="Login">
+  </form>
+</body>
+</html>
